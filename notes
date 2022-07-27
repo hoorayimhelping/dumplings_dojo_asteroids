@@ -1,0 +1,9 @@
+Game Notes:
+
+To Implement
+ - draw the ship (a triangle)
+ - handle keyboard input
+   - moving the ship
+   - fire the ship's cannons
+ - draw asteroids
+ - spawn in asteroids

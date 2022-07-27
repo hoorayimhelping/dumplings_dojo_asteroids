@@ -1,17 +1,22 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<title>Asteroids in HTML5</title>
+    <title>Asteroids in HTML5</title>
 
 </head>
+
 <body>
-  <canvas id="canvas" width="1024" height="768" style="border: 4px red solid">
+    <canvas id="canvas" width="1024" height="768" style="border: 4px red solid">
     If you're seeing this, turn on JavaScript or use a current version of a modern browser
   </canvas>
 
-  <script type="module">
-    import GameController from './controller.js'
-    const gc = new GameController(document.getElementById('canvas'), 800, 600);
-  </script>
+    <script type="module">
+        import GameController from './controller.js'
+        const gc = new GameController(document.getElementById('canvas'), 800, 600)
+        document.addEventListener('keydown', gc.keyDown)
+        document.addEventListener('keyup', gc.keyUp)
+    </script>
 </body>
+
 </html>
