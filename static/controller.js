@@ -18,7 +18,21 @@ export default class GameController {
       this.player.position.x = this.canvas.clientWidth / 2
       this.player.position.y = this.canvas.clientHeight / 2
       
-      this.bullets = [new Entity({x: -100, y: -100, width: 2, height: 2 })]
+      this.fillColors = [
+        'red',
+        'green',
+        'dodgerblue',
+        'yellow',
+        'orange',
+        'purple',
+      ]
+      this.bullets = [
+        new Entity({x: -100, y: -100, width: 20, height: 20 }), 
+        new Entity({x: -100, y: -100, width: 20, height: 20 }), 
+        new Entity({x: -100, y: -100, width: 20, height: 20 }), 
+        new Entity({x: -100, y: -100, width: 20, height: 20 }), 
+        new Entity({x: -100, y: -100, width: 20, height: 20 }), 
+        new Entity({x: -100, y: -100, width: 20, height: 20 })]
 
       this.keyboardKeysToListenTo = {
         ARROW_UP: false,
@@ -37,7 +51,6 @@ export default class GameController {
       this.tick++
       window.requestAnimationFrame(this.update);
       // console.log(this.player.angle, Math.sin(this.player.angle), Math.cos(this.player.angle))
-      console.log
       if (this.keyboardKeysToListenTo.ARROW_UP) {
         this.player.velocity.y += this.player.acceleration
         this.player.velocity.y = Math.min(this.player.maxVelocity, this.player.velocity.y)
@@ -75,37 +88,35 @@ export default class GameController {
 
     // rendering calls go here 
     render() {
+      this.context.setTransform(1,0,0,1,0,0); 
       this.context.clearRect(0, 0, this.canvas.clientWidth, this.canvas.clientHeight);
+
       this.context.fillStyle = 'black'
       this.context.fillRect(0, 0, this.canvas.clientWidth, this.canvas.clientHeight);
 
 
       this.context.strokeStyle = this.player.color
 
-      // this.context.rotate(this.player.angle * Math.PI / 180); // rotate canvas
+      this.context.translate(this.player.position.x, this.player.position.y + this.player.yChange);
+      this.context.rotate(this.player.angle * Math.PI / 180); // rotate canvas
+      this.context.translate(-this.player.position.x, -this.player.position.y);
+      
       this.context.beginPath();
 
-      // // Initial position
-      // this.context.moveTo(this.player.position.x, this.player.position.y);
-      // // RIGHT / hypotenuse
-      // this.context.lineTo(this.player.position.x + this.player.xChange,this.player.position.y - this.player.yChange);
-      // this.context.fillRect(this.player.position.x, this.player.position.y, 10,10)
-      // // BOTTOM / cosine
-      // this.context.lineTo(this.player.position.x - this.player.xChange, this.player.position.y + this.player.yChange);
-      // // this.context.lineTo(this.player.position.x + (this.player.xChange * Math.cos(this.player.angle)), this.player.position.y + (this.player.yChange * Math.sin(this.player.angle)))
-      // this.context.lineTo(this.player.position.x - (this.player.xChange * Math.cos(this.player.angle)), this.player.position.y - (this.player.yChange * Math.sin(this.player.angle)))
-      // LEFT SIDE / sin
-
       this.context.moveTo(this.player.position.x,this.player.position.y);
-      this.context.lineTo(this.player.position.x + 10,this.player.position.y + 35);
-      this.context.lineTo(this.player.position.x - 10,this.player.position.y + 35);
+      this.context.lineTo(this.player.position.x - 10,this.player.position.y - 35);
+      this.context.lineTo(this.player.position.x + 10,this.player.position.y - 35);
 
       this.context.closePath()
       // Complete draw
       this.context.stroke()
-      // this.context.restore();
-    //   this.context.fill();
-    }
+      this.context.restore();
+
+      for (let counter = 0; counter < this.bullets.length; counter +=1) {
+        this.context.fillStyle = this.fillColors[counter]
+        this.context.fillRect(this.bullets[counter].x, this.bullets[counter].y, this.bullets[counter].width, this.bullets[counter].height)
+      }
+     }
 
     // handle key inputs
     keyDown(event) {
@@ -122,7 +133,7 @@ export default class GameController {
         case "ArrowDown":
           this.keyboardKeysToListenTo.ARROW_DOWN = true
           break;
-        case "Spacebar":
+        case " ":
           this.keyboardKeysToListenTo.SPACEBAR = true
           break;
         default:
@@ -145,7 +156,7 @@ export default class GameController {
         case "ArrowDown":
           this.keyboardKeysToListenTo.ARROW_DOWN = false
           break;
-        case "Spacebar":
+        case " ":
           this.keyboardKeysToListenTo.SPACEBAR = false
           break;
         default:
@@ -154,11 +165,14 @@ export default class GameController {
     }
 
     fireBullets() {
+
       for (let counter = 0; counter < this.bullets.length; counter +=1) {
         if (this.bullets[counter].alive === false) {
           this.bullets[counter].alive = true
-          this.bullets[counter].x = this.ship.position.x
-          this.bullets[counter].y = this.ship.position.y
+          this.bullets[counter].x = this.player.position.x + 20 * counter
+          this.bullets[counter].y = this.player.position.y + 20 * counter
+
+          console.log("firing from  ",this.player.position.x, this.player.position.y )
         }
       }
     }
