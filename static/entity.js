@@ -11,12 +11,12 @@ export default class Entity {
     update() {}
 
     getCoords() {
-        return {
-            x: this.x,
-            y: this.y,
-            width: this.width,
-            height: this.height
-        }
+      return {
+        x: this.x,
+        y: this.y,
+        width: this.width,
+        height: this.height
+      }
     }
 }
 
